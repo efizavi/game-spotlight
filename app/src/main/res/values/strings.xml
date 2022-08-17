@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">GameSpotlight</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- TODO: Remove and use categories from IGDB API -->
+    <string-array name="genre_array">
+        <item>Genre</item>
+        <item>Action</item>
+        <item>RPG</item>
+        <item>Adventure</item>
+        <item>Shooter</item>
+        <item>Sports</item>
+        <item>MMO</item>
+        <item>Strategy</item>
+        <item>Puzzle</item>
+    </string-array>
+    <string-array name="rating_array">
+        <item>Min. Rating</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+    </string-array>
+    <string-array name="publisher_array">
+        <item>Publisher</item>
+        <item>Activision Blizzard.</item>
+        <item>Valve Corporation.</item>
+        <item>Bethesda Softworks.</item>
+        <item>Electronic Arts (EA)</item>
+        <item>Ubisoft.</item>
+        <item>Sega.</item>
+    </string-array>
+</resources>
