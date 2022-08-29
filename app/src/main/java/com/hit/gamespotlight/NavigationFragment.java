@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,9 +37,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import proto.Game;
+import proto.Genre;
+
 public class NavigationFragment extends Fragment {
     private RecyclerView gameList;
     private LinearLayoutManager layoutManager;
+    private IGDBController controller;
+
     // TODO: remove
     private String[] allGamesPlaceholder = {"Apex Legends", "Grand Theft Auto V", "Minecraft", "Fortnite",
             "Red Dead Redemption 2", "Tetris", "Overwatch", "The Elder Scrolls V: Skyrim", "League of Legends",
@@ -200,5 +206,13 @@ public class NavigationFragment extends Fragment {
         }, getViewLifecycleOwner());
 
         super.onViewCreated(view, savedInstanceState);
+
+        controller = ((MainActivity)getActivity()).getController();
+        List<Game> games = controller.getGameList();
+        Log.i("game count", String.valueOf(games.size()));
+        List<Genre> genres = controller.getGenreList();
+        for (Genre g: genres) {
+            Log.i("GENRE: ", g.getName());
+        }
     }
 }
