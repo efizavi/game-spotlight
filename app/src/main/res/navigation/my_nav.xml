@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/navigationFragment">
+    app:startDestination="@id/loadingFragment">
 
     <fragment
         android:id="@+id/mainFragment"
@@ -22,5 +22,14 @@
         <action
             android:id="@+id/action_navigationFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.hit.gamespotlight.LoadingFragment"
+        android:label="fragment_loading"
+        tools:layout="@layout/fragment_loading" >
+        <action
+            android:id="@+id/action_loadingFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
     </fragment>
 </navigation>

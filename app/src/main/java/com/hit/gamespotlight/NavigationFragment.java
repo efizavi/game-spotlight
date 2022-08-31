@@ -34,6 +34,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -134,9 +135,7 @@ public class NavigationFragment extends Fragment {
         Spinner spinner3 = view.findViewById(R.id.spinner3);
         spinner3.setAdapter(spinnerPublishersAdapter);
 
-        for (String game: allGamesPlaceholder) {
-            gamesPlaceholder.add(game);
-        }
+        Collections.addAll(gamesPlaceholder, allGamesPlaceholder);
 
         gameList = (RecyclerView) view.findViewById(R.id.gamelist);
         layoutManager = new LinearLayoutManager(view.getContext());
@@ -180,20 +179,18 @@ public class NavigationFragment extends Fragment {
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
-                        return false;
+                        gamesPlaceholder.clear();
+                        List<Game> games = controller.getGameList(query);
+                        for (Game game : games) {
+                            gamesPlaceholder.add(game.getName());
+                        }
+                        Collections.sort(gamesPlaceholder);
+                        gameAdapter.notifyDataSetChanged();
+                        return true;
                     }
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        gamesPlaceholder.clear();
-                        gamesPlaceholder.addAll(Arrays.asList(allGamesPlaceholder));
-                        for (String game : allGamesPlaceholder) {
-                            if (!game.toLowerCase().contains(newText.toLowerCase())) {
-                                gamesPlaceholder.remove(game);
-                            }
-                        }
-
-                        gameAdapter.notifyDataSetChanged();
                         return true;
                     }
                 });
@@ -214,5 +211,13 @@ public class NavigationFragment extends Fragment {
         for (Genre g: genres) {
             Log.i("GENRE: ", g.getName());
         }
+
+        gamesPlaceholder.clear();
+        for (Game game : games) {
+            gamesPlaceholder.add(game.getName());
+        }
+
+        Collections.sort(gamesPlaceholder);
+        gameAdapter.notifyDataSetChanged();
     }
 }
