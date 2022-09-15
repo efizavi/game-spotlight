@@ -3,16 +3,140 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     tools:context=".MainFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/txtTemp"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/purple_700"
-        android:text="MAIN CONTENT" />
+        android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/imgGame"
+                android:layout_width="150dp"
+                android:layout_height="150dp"/>
+
+            <Space
+                android:layout_width="8dp"
+                android:layout_height="0dp"/>
+
+            <LinearLayout
+                android:padding="12dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+
+
+                <TextView
+                    android:id="@+id/txtGameName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:hint="nadgfgdfgfdffdgfdgdffgddfgme"
+                    android:text="" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"/>
+
+                <TextView
+                    android:id="@+id/txtGameReleaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="@color/white"
+                    android:hint="date"
+                    android:textSize="18sp"
+                    android:text="Release Date:" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"/>
+                <TextView
+                    android:id="@+id/txtGamePlatforms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:text="Publisher: " />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"/>
+
+                <TextView
+                    android:id="@+id/txtGameRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="@color/white"
+                    android:hint="date"
+                    android:textSize="18sp"
+                    android:text="Rating:" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:layout_margin="24dp"
+            android:id="@+id/txtGameSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:lineSpacingExtra="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="@color/white"
+            android:hint="summery"
+            android:text="" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="12dp"/>
+
+
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"/>
+
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="@color/white"
+            android:textStyle=""
+            android:text="" />
+
+
+
+    </LinearLayout>
 </FrameLayout>

@@ -1,27 +1,29 @@
 package com.hit.gamespotlight;
 
 import android.content.Context;
-import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
+
+import proto.Game;
 
 public class GameAdapter extends RecyclerView.Adapter<GameViewHolder>{
     private LayoutInflater inflater;
-    // TODO: Implement with proper game object
-    private List<String> gamesPlaceholder;
+    private List<GameInfo> gameList;
 
-    public GameAdapter(Context context, List<String> gamesPlaceholder) {
+    public GameAdapter(Context context, List<GameInfo> gameList) {
         inflater = LayoutInflater.from(context);
-        this.gamesPlaceholder = gamesPlaceholder;
+        this.gameList = gameList;
     }
 
     @NonNull
@@ -33,22 +35,39 @@ public class GameAdapter extends RecyclerView.Adapter<GameViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
-        holder.gameName.setText(gamesPlaceholder.get(position));
+        GameInfo game = gameList.get(position);
+        holder.gameName.setText(game.getName() + " ("+game.getReleaseYear()+")");
+        holder.gameInfo.setText(""+game.getGenresNames());
+        String imageURL = game.getImageUrl();
+
+
+        Picasso.get()
+                    .load(imageURL)
+                    .placeholder(R.drawable.igdb)
+                    .error(R.drawable.igdb)
+                    .into(holder.gameImage);
+
+
+
     }
 
     @Override
     public int getItemCount() {
-        return gamesPlaceholder.size();
+        return gameList.size();
     }
 }
 
 class GameViewHolder extends RecyclerView.ViewHolder
 {
+    ImageView gameImage;
     TextView gameName;
+    TextView gameInfo;
 
     public GameViewHolder(View itemView) {
         super(itemView);
-        gameName = (TextView) itemView.findViewById(R.id.gameName);
+        gameImage = itemView.findViewById(R.id.gameImage);
+        gameName = itemView.findViewById(R.id.gameName);
+        gameInfo = itemView.findViewById(R.id.gameYearAndGenre);
     }
 
 }

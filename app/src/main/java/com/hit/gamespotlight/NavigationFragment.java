@@ -1,6 +1,5 @@
 package com.hit.gamespotlight;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,46 +14,35 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import proto.Game;
 import proto.Genre;
 
 public class NavigationFragment extends Fragment {
-    private RecyclerView gameList;
+    private RecyclerView gamesRecyclerView;
     private LinearLayoutManager layoutManager;
     private IGDBController controller;
 
-    // TODO: remove
-    private String[] allGamesPlaceholder = {"Apex Legends", "Grand Theft Auto V", "Minecraft", "Fortnite",
-            "Red Dead Redemption 2", "Tetris", "Overwatch", "The Elder Scrolls V: Skyrim", "League of Legends",
-            "Super Smash Bros. Ultimate", "Mario Kart 8", "Super Mario Odyssey", "World of Warcraft",
-            "Grand Theft Auto: San Andreas", "Call of Duty: Modern Warfare 3", "Call of Duty: Black Ops",
-            "Borderlands 2", "FIFA 18", "Sonic the Hedgehog", "The Sims 4", "Worms World Party",
-            "The Witcher 3: Wild Hunt", "Elden Ring", "Divinity: Original Sin II"};
-    private ArrayList<String> gamesPlaceholder = new ArrayList<>();
     private GameAdapter gameAdapter;
+
+    private ArrayList<GameInfo> gamesList = new ArrayList<>();
+    private ArrayList<GameInfo> filteredGamesList = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
+    private List<String> genresNames = new ArrayList<>();
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -71,53 +59,45 @@ public class NavigationFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
+        genresNames.add("All");
 
-        String[] genres = getResources().getStringArray(R.array.genre_array);
+        // String[] genres = getResources().getStringArray(R.array.genre_array);
         String[] ratings = getResources().getStringArray(R.array.rating_array);
         String[] publishers = getResources().getStringArray(R.array.publisher_array);
 
-        ArrayAdapter<String> spinnerGenreAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, genres) {
+        ArrayAdapter<String> spinnerGenreAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, genresNames) {
             @Override
             public boolean isEnabled(int position) {
-                return position != 0;
+                return true;
             }
 
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 TextView view = (TextView) super.getDropDownView(position, convertView, parent);
-                if(position == 0) {
-                    view.setTextColor(Color.GRAY);
-                }
                 return view;
             }
         };
         ArrayAdapter<String> spinnerRatingsAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item,ratings){
             @Override
             public boolean isEnabled(int position) {
-                return position != 0;
+                return true;
             }
 
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 TextView view = (TextView) super.getDropDownView(position, convertView, parent);
-                if(position == 0) {
-                    view.setTextColor(Color.GRAY);
-                }
                 return view;
             }
         };
         ArrayAdapter<String> spinnerPublishersAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item,publishers){
             @Override
             public boolean isEnabled(int position) {
-                return position != 0;
+                return true;
             }
 
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 TextView view = (TextView) super.getDropDownView(position, convertView, parent);
-                if(position == 0) {
-                    view.setTextColor(Color.GRAY);
-                }
                 return view;
             }
         };
@@ -135,19 +115,75 @@ public class NavigationFragment extends Fragment {
         Spinner spinner3 = view.findViewById(R.id.spinner3);
         spinner3.setAdapter(spinnerPublishersAdapter);
 
-        Collections.addAll(gamesPlaceholder, allGamesPlaceholder);
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filteredGamesList.clear();
+                filteredGamesList.addAll(gamesList);
+                if (i == 0) {
+                    // do nothing
+                } else {
+                    String name = genresNames.get(i);
+                    filteredGamesList.removeIf((info) -> !info.hasGenre(name));
+                }
+                gameAdapter.notifyDataSetChanged();
+            }
 
-        gameList = (RecyclerView) view.findViewById(R.id.gamelist);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filteredGamesList.clear();
+                filteredGamesList.addAll(gamesList);
+                if (i == 0) {
+                    // do nothing
+                } else {
+//                    String name = genres[i];
+//                    filteredGamesList.removeIf((info) -> !info.hasGenre(name));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filteredGamesList.clear();
+                filteredGamesList.addAll(gamesList);
+                if (i == 0) {
+                    // do nothing
+                } else {
+//                    String name = genres[i];
+//                    filteredGamesList.removeIf((info) -> !info.hasGenre(name));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        gamesRecyclerView = view.findViewById(R.id.gamelist);
         layoutManager = new LinearLayoutManager(view.getContext());
-        gameList.setLayoutManager(layoutManager);
-        gameList.setItemAnimator(new DefaultItemAnimator());
+        gamesRecyclerView.setLayoutManager(layoutManager);
+        gamesRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        gameList.addOnItemTouchListener(new GameItemClickListener(view.getContext(), gameList, new GameItemClickListener.OnItemClickListener() {
+        gamesRecyclerView.addOnItemTouchListener(new GameItemClickListener(view.getContext(), gamesRecyclerView, new GameItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        String game = ((TextView)((LinearLayout)view).getChildAt(0)).getText().toString();
+                        GameInfo gameInfo = filteredGamesList.get(position);
                         FragmentManager fragmentManager = getParentFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragmentContainerView, MainFragment.newInstance(game));
+                        transaction.replace(R.id.fragmentContainerView, MainFragment.newInstance(gameInfo));
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
@@ -157,8 +193,8 @@ public class NavigationFragment extends Fragment {
                     }
                 }));
 
-        gameAdapter = new GameAdapter(view.getContext(), gamesPlaceholder);
-        gameList.setAdapter(gameAdapter);
+        gameAdapter = new GameAdapter(view.getContext(), filteredGamesList);
+        gamesRecyclerView.setAdapter(gameAdapter);
 
         return view;
     }
@@ -175,16 +211,30 @@ public class NavigationFragment extends Fragment {
                 MenuItem menuItem = menu.findItem(R.id.action_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
                 searchView.setQueryHint("Search games by name...");
+                searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean focused) {
+                        if(!focused){
+                            filteredGamesList.clear();
+                            filteredGamesList.addAll(gamesList);
+                            gameAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
-                        gamesPlaceholder.clear();
-                        List<Game> games = controller.getGameList(query);
-                        for (Game game : games) {
-                            gamesPlaceholder.add(game.getName());
+                        filteredGamesList.clear();
+                       // List<Game> games = controller.getGameList(query);
+                        for (GameInfo gameInfo : gamesList) {
+                            if (gameInfo.getName().toLowerCase().contains(query.toLowerCase())
+                            ){
+                                filteredGamesList.add(gameInfo);
+                            }
+
                         }
-                        Collections.sort(gamesPlaceholder);
+                      //  Collections.sort(gamesPlaceholder);
                         gameAdapter.notifyDataSetChanged();
                         return true;
                     }
@@ -207,17 +257,28 @@ public class NavigationFragment extends Fragment {
         controller = ((MainActivity)getActivity()).getController();
         List<Game> games = controller.getGameList();
         Log.i("game count", String.valueOf(games.size()));
-        List<Genre> genres = controller.getGenreList();
+         genres = controller.getGenreList();
         for (Genre g: genres) {
+            genresNames.add(g.getName());
             Log.i("GENRE: ", g.getName());
         }
 
-        gamesPlaceholder.clear();
+        gamesList.clear();
         for (Game game : games) {
-            gamesPlaceholder.add(game.getName());
+            GameInfo gameInfo = new GameInfo(
+                    game.getName(),
+                    game.getSummary(),
+                    game.getCover().getUrl(),
+                    game.getFirstReleaseDate(),
+                    game.getGenresList(),
+                    (int) game.getTotalRating(),
+                    game.getPlatformsList()
+            );
+            gamesList.add(gameInfo);
         }
+        filteredGamesList.addAll(gamesList);
 
-        Collections.sort(gamesPlaceholder);
+        //Collections.sort(gamesPlaceholder);
         gameAdapter.notifyDataSetChanged();
     }
 }

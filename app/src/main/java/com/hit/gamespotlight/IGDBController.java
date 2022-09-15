@@ -29,7 +29,8 @@ public class IGDBController {
 
     public List<Game> getGameList() {
         try {
-            byte[] bytes = new RetrieveTask(wrapper).execute(Endpoints.GAMES.toString(), "fields *; limit 200;").get();
+            byte[] bytes = new RetrieveTask(wrapper).execute(Endpoints.GAMES.toString(),
+                    "fields name, cover.url, first_release_date, total_rating_count, platforms.abbreviation, summary,genres.*, total_rating, slug; where total_rating > 0;limit 300; sort total_rating desc;").get();
             return GameResult.parseFrom(bytes).getGamesList();
         } catch (ExecutionException | InterruptedException | InvalidProtocolBufferException ex) {
             Log.e(tag, "getGameList: "+ex.getMessage());
@@ -52,7 +53,7 @@ public class IGDBController {
             byte[] bytes = new RetrieveTask(wrapper).execute(Endpoints.GENRES.toString(), "fields *;").get();
             return GenreResult.parseFrom(bytes).getGenresList();
         } catch (ExecutionException | InterruptedException | InvalidProtocolBufferException ex) {
-            Log.e(tag, "getGameList: "+ex.getMessage());
+            Log.e(tag, "getGenreList: "+ex.getMessage());
         }
         return Collections.emptyList();
     }
