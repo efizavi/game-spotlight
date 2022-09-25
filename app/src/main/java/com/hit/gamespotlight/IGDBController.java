@@ -73,7 +73,8 @@ class RetrieveTask extends AsyncTask<String, Void, byte[]> {
         try {
             bytes = wrapper.apiProtoRequest(Endpoints.valueOf(queries[0]), queries[1]);
         } catch (RequestException e) {
-            Log.e("Failed to get list of "+queries[0], e.getMessage());
+            int x = 9;
+//            Log.e("Failed to get list of "+queries[0], e.getMessage());
         }
         return bytes;
     }

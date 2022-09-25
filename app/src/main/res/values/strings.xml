@@ -26,11 +26,10 @@
     </string-array>
     <string-array name="publisher_array">
         <item>All</item>
-        <item>Activision Blizzard.</item>
-        <item>Valve Corporation.</item>
-        <item>Bethesda Softworks.</item>
-        <item>Electronic Arts (EA)</item>
-        <item>Ubisoft.</item>
-        <item>Sega.</item>
+        <item>2020-2029</item>
+        <item>2010-2019</item>
+        <item>2000-2009</item>
+        <item>1990-1999</item>
+        <item>1980-1989</item>
     </string-array>
 </resources>

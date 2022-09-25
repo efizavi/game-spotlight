@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -63,7 +64,7 @@ public class NavigationFragment extends Fragment {
 
         // String[] genres = getResources().getStringArray(R.array.genre_array);
         String[] ratings = getResources().getStringArray(R.array.rating_array);
-        String[] publishers = getResources().getStringArray(R.array.publisher_array);
+        String[] years = getResources().getStringArray(R.array.publisher_array);
 
         ArrayAdapter<String> spinnerGenreAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, genresNames) {
             @Override
@@ -89,7 +90,7 @@ public class NavigationFragment extends Fragment {
                 return view;
             }
         };
-        ArrayAdapter<String> spinnerPublishersAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item,publishers){
+        ArrayAdapter<String> spinnerPublishersAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item,years){
             @Override
             public boolean isEnabled(int position) {
                 return true;
@@ -124,7 +125,7 @@ public class NavigationFragment extends Fragment {
                     // do nothing
                 } else {
                     String name = genresNames.get(i);
-                    filteredGamesList.removeIf((info) -> !info.hasGenre(name));
+                    filteredGamesList.removeIf((gameInfo) -> !gameInfo.hasGenre(name));
                 }
                 gameAdapter.notifyDataSetChanged();
             }
@@ -135,6 +136,8 @@ public class NavigationFragment extends Fragment {
             }
         });
 
+
+
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -143,8 +146,8 @@ public class NavigationFragment extends Fragment {
                 if (i == 0) {
                     // do nothing
                 } else {
-//                    String name = genres[i];
-//                    filteredGamesList.removeIf((info) -> !info.hasGenre(name));
+                    int minRate = Integer.parseInt(ratings[i]);
+                    filteredGamesList.removeIf((gameInfo) -> gameInfo.getRating() < minRate);
                 }
             }
 
@@ -162,9 +165,12 @@ public class NavigationFragment extends Fragment {
                 if (i == 0) {
                     // do nothing
                 } else {
-//                    String name = genres[i];
-//                    filteredGamesList.removeIf((info) -> !info.hasGenre(name));
+                    String yearsString = years[i];
+                    int fromYear = Integer.parseInt(yearsString.split("-")[0]);
+                    int toYear = Integer.parseInt(yearsString.split("-")[1]);
+                    filteredGamesList.removeIf((gameInfo) -> gameInfo.getReleaseYear() < fromYear || gameInfo.getReleaseYear() > toYear);
                 }
+                gameAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -199,11 +205,17 @@ public class NavigationFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        MenuHost menuHost = requireActivity();
-        menuHost.addMenuProvider(new MenuProvider() {
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
+
+//        Menu menu = toolbar.getMenu();//requireActivity();
+//        toolbar.addMenuProvider();
+
+        toolbar.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu, menu);
@@ -262,6 +274,7 @@ public class NavigationFragment extends Fragment {
             genresNames.add(g.getName());
             Log.i("GENRE: ", g.getName());
         }
+        filteredGamesList.addAll(gamesList);
 
         gamesList.clear();
         for (Game game : games) {
