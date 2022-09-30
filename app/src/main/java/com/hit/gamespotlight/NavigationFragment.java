@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import proto.Game;
@@ -60,6 +61,7 @@ public class NavigationFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
+        genresNames.clear();
         genresNames.add("All");
 
         // String[] genres = getResources().getStringArray(R.array.genre_array);
@@ -149,6 +151,7 @@ public class NavigationFragment extends Fragment {
                     int minRate = Integer.parseInt(ratings[i]);
                     filteredGamesList.removeIf((gameInfo) -> gameInfo.getRating() < minRate);
                 }
+                gameAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -238,15 +241,19 @@ public class NavigationFragment extends Fragment {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
                         filteredGamesList.clear();
-                       // List<Game> games = controller.getGameList(query);
+                        for (Game game : controller.getGameList(query)) {
+                            filteredGamesList.add(getGameInfo(game));
+                        }
+                        /*
+                        TODO (Efi): Restore if we want to filter local list only
                         for (GameInfo gameInfo : gamesList) {
                             if (gameInfo.getName().toLowerCase().contains(query.toLowerCase())
                             ){
                                 filteredGamesList.add(gameInfo);
                             }
 
-                        }
-                      //  Collections.sort(gamesPlaceholder);
+                        }*/
+
                         gameAdapter.notifyDataSetChanged();
                         return true;
                     }
@@ -278,20 +285,22 @@ public class NavigationFragment extends Fragment {
 
         gamesList.clear();
         for (Game game : games) {
-            GameInfo gameInfo = new GameInfo(
-                    game.getName(),
-                    game.getSummary(),
-                    game.getCover().getUrl(),
-                    game.getFirstReleaseDate(),
-                    game.getGenresList(),
-                    (int) game.getTotalRating(),
-                    game.getPlatformsList()
-            );
+            GameInfo gameInfo = getGameInfo(game);
             gamesList.add(gameInfo);
         }
         filteredGamesList.addAll(gamesList);
 
-        //Collections.sort(gamesPlaceholder);
         gameAdapter.notifyDataSetChanged();
+    }
+
+    private GameInfo getGameInfo(Game game) {
+        return new GameInfo(
+                game.getName(),
+                game.getSummary(),
+                game.getCover().getUrl(),
+                game.getFirstReleaseDate(),
+                game.getGenresList(),
+                (int) game.getTotalRating(),
+                game.getPlatformsList());
     }
 }
